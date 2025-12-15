@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Christmas Letter</title>
+    <style>
+        :root {
+            --bg1: #0b1220;
+            --bg2: #0f1d34;
+            --card: #0f172a;
+            --ink: #e5e7eb;
+            --muted: #9ca3af;
+            --accent: #f59e0b;
+            --red: #ef4444;
+            --green: #22c55e;
+            --paper: #fbf7ef;
+            --paper-ink: #111827;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            background:
+                radial-gradient(1200px 700px at 20% 10%, #1b2a4a 0%, transparent 60%),
+                radial-gradient(1000px 600px at 80% 30%, #2a1b4a 0%, transparent 55%),
+                linear-gradient(160deg, var(--bg1), var(--bg2));
+            color: var(--ink);
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+            overflow: hidden;
+        }
+
+        /* subtle snow */
+        .snow {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            opacity: .7;
+            filter: blur(.1px);
+        }
+
+        .flake {
+            position: absolute;
+            top: -10vh;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .9);
+            animation: fall linear infinite;
+            opacity: .6;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(120vh);
+            }
+        }
+
+        .wrap {
+            width: min(920px, 92vw);
+            padding: 28px 18px;
+            display: grid;
+            gap: 18px;
+            justify-items: center;
+        }
+
+        .title {
+            text-align: center;
+            line-height: 1.25;
+            margin: 0;
+            font-size: clamp(20px, 3.2vw, 30px);
+            letter-spacing: .2px;
+        }
+
+        .subtitle {
+            margin: 0;
+            color: var(--muted);
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .btn {
+            border: 0;
+            padding: 12px 18px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            color: white;
+            font-weight: 700;
+            letter-spacing: .2px;
+            cursor: pointer;
+            box-shadow: 0 14px 35px rgba(0, 0, 0, .35);
+            transform: translateY(0);
+            transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, .45);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+            opacity: .95;
+        }
+
+        /* stage card */
+        .stage {
+            width: min(760px, 92vw);
+            border-radius: 22px;
+            background: rgba(15, 23, 42, .62);
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow: 0 20px 80px rgba(0, 0, 0, .45);
+            padding: 26px 18px 30px;
+            display: grid;
+            justify-items: center;
+            gap: 18px;
+            position: relative;
+            overflow: vi;
+        }
+
+        /* envelope */
+        .envelope-area {
+            width: min(520px, 92vw);
+            height: auto;
+            min-height: 420px;
+            padding-bottom: 520px;
+            display: grid;
+            place-items: center;
+            position: relative;
+            margin-top: 6px;
+        }
+
+        .envelope {
+            width: 420px;
+            height: 260px;
+            position: relative;
+            transform: translateY(0);
+            transition: transform .6s ease;
+        }
+
+        @media (max-width:520px) {
+            .envelope {
+                width: 320px;
+                height: 210px;
+            }
+        }
+
+        .env-back {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, #fde68a, #fbbf24);
+            border-radius: 18px;
+            box-shadow: 0 22px 60px rgba(0, 0, 0, .35);
+            border: 1px solid rgba(0, 0, 0, .08);
+            overflow: hidden;
+        }
+
+        .env-back:before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(600px 260px at 40% 10%, rgba(255, 255, 255, .35), transparent 60%),
+                repeating-linear-gradient(135deg, rgba(239, 68, 68, .18) 0 14px, rgba(34, 197, 94, .14) 14px 28px);
+            mix-blend-mode: overlay;
+            opacity: .55;
+        }
+
+        .env-flap {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: -1px;
+            height: 55%;
+            transform-origin: top center;
+            background: linear-gradient(180deg, #f59e0b, #d97706);
+            clip-path: polygon(0 0, 100% 0, 50% 95%);
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, .22));
+            transition: transform .95s cubic-bezier(.2, .9, .2, 1);
+            border-top-left-radius: 18px;
+            border-top-right-radius: 18px;
+        }
+
+        .env-front {
+            position: absolute;
+            inset: 0;
+            background: transparent;
+            pointer-events: none;
+        }
+
+        .env-left,
+        .env-right,
+        .env-bottom {
+            position: absolute;
+            background: linear-gradient(180deg, #fcd34d, #f59e0b);
+            opacity: .98;
+        }
+
+        .env-bottom {
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 55%;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            filter: drop-shadow(0 10px 10px rgba(0, 0, 0, .18));
+        }
+
+        .env-left {
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 55%;
+            clip-path: polygon(0 0, 100% 50%, 0 100%);
+            opacity: .85;
+        }
+
+        .env-right {
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 55%;
+            clip-path: polygon(100% 0, 0 50%, 100% 100%);
+            opacity: .85;
+        }
+
+        .seal {
+            position: absolute;
+            left: 50%;
+            top: 58%;
+            transform: translate(-50%, -50%);
+            width: 62px;
+            height: 62px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 30%, #fda4af, #ef4444);
+            box-shadow: 0 12px 22px rgba(0, 0, 0, .25);
+            border: 2px solid rgba(255, 255, 255, .35);
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            color: rgba(255, 255, 255, .95);
+            letter-spacing: .5px;
+            user-select: none;
+        }
+
+        .seal span {
+            transform: rotate(-8deg);
+        }
+
+        /* letter */
+        .letter {
+            position: absolute;
+            left: 50%;
+            top: 18px;
+            /* ✅ neo theo TOP để nội dung dài xuống */
+            bottom: auto;
+            /* ✅ */
+
+            width: min(380px, 86vw);
+            height: auto;
+            overflow: visible;
+
+            /* đóng: đẩy xuống nằm trong phong bì */
+            transform: translateX(-50%) translateY(170px) scale(.98);
+            opacity: 0;
+
+            background: linear-gradient(180deg, var(--paper), #fff);
+            color: var(--paper-ink);
+            border-radius: 18px;
+            box-shadow: 0 22px 60px rgba(0, 0, 0, .35);
+            border: 1px solid rgba(0, 0, 0, .08);
+            padding: 18px 16px 22px;
+
+            z-index: 7;
+        }
+
+
+        .letter h2 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            letter-spacing: .2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .letter h2 .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--green), #60a5fa);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, .15);
+        }
+
+        .paper-lines {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(to bottom, transparent 0 22px, rgba(17, 24, 39, .05) 22px 23px) 0 44px / 100% 23px repeat-y;
+            opacity: .65;
+            pointer-events: none;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+            font-size: 15px;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            min-height: 0px;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1em;
+            transform: translateY(2px);
+            background: rgba(17, 24, 39, .85);
+            margin-left: 2px;
+            animation: blink .9s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: .1
+            }
+        }
+
+        /* opened state */
+        .opened .env-flap {
+            transform: rotateX(165deg);
+        }
+
+        .opened .letter {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px) scale(1);
+        }
+
+        .opened .envelope {
+            transform: translateY(6px);
+        }
+
+        /* modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            place-items: center;
+            background: rgba(0, 0, 0, .55);
+            backdrop-filter: blur(6px);
+            z-index: 20;
+            padding: 18px;
+        }
+
+        .modal.show {
+            display: grid;
+        }
+
+        .dialog {
+            width: min(420px, 92vw);
+            background: rgba(15, 23, 42, .92);
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 18px;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, .55);
+            padding: 16px 16px 14px;
+        }
+
+        .dialog h3 {
+            margin: 0 0 6px;
+            font-size: 16px;
+        }
+
+        .dialog p {
+            margin: 0 0 10px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .input {
+            width: 100%;
+            padding: 12px 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, .14);
+            background: rgba(2, 6, 23, .65);
+            color: var(--ink);
+            outline: none;
+            font-size: 14px;
+        }
+
+        .hint {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            color: rgba(229, 231, 235, .7);
+            font-size: 12px;
+        }
+
+        .kbd {
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, .18);
+            background: rgba(255, 255, 255, .06);
+        }
+
+        .footer-note {
+            margin-top: 2px;
+            color: rgba(229, 231, 235, .65);
+            font-size: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="snow" aria-hidden="true" id="snow"></div>
+
+    <main class="wrap">
+        <h1 class="title">A tiny Christmas letter ✨</h1>
+        <p class="subtitle">Open the envelope, type your name, and enjoy it. (Hope you like it)</p>
+
+        <section class="stage" id="stage">
+            <button class="btn" id="openBtn">Open letter</button>
+
+            <div class="envelope-area">
+                <div class="envelope" id="envelope" aria-label="Envelope">
+                    <div class="env-back"></div>
+                    <div class="env-flap" id="flap"></div>
+
+                    <div class="letter" id="letter" role="article" aria-live="polite">
+                        <div class="paper-lines" aria-hidden="true"></div>
+                        <h2><span class="dot"></span> Merry Christmas</h2>
+                        <div class="content" id="content"></div>
+                    </div>
+
+                    <div class="env-front" aria-hidden="true">
+                        <div class="env-left"></div>
+                        <div class="env-right"></div>
+                        <div class="env-bottom"></div>
+                        <div class="seal"><span>❤</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-note">Tip: refresh the page to replay the animation 🎄</div>
+        </section>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="dialog">
+            <h3 id="modalTitle">Please Input your name:</h3>
+            <p>Press <span class="kbd">Enter</span> to continue (or <span class="kbd">Esc</span> to cancel).</p>
+            <input class="input" id="nameInput" type="text" placeholder="Your name..." autocomplete="name" />
+            <div class="hint">
+                <span class="kbd">Enter</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Snow generator (lightweight) ---
+        (function makeSnow() {
+            const snow = document.getElementById('snow');
+            const count = 42;
+            for (let i = 0; i < count; i++) {
+                const f = document.createElement('div');
+                f.className = 'flake';
+                const left = Math.random() * 100;
+                const size = 3 + Math.random() * 5;
+                const dur = 6 + Math.random() * 10;
+                const delay = Math.random() * 6;
+                f.style.left = left + 'vw';
+                f.style.width = size + 'px';
+                f.style.height = size + 'px';
+                f.style.animationDuration = dur + 's';
+                f.style.animationDelay = delay + 's';
+                f.style.opacity = (0.25 + Math.random() * 0.6).toFixed(2);
+                snow.appendChild(f);
+            }
+        })();
+
+        const openBtn = document.getElementById('openBtn');
+        const modal = document.getElementById('modal');
+        const nameInput = document.getElementById('nameInput');
+        const stage = document.getElementById('stage');
+        const contentEl = document.getElementById('content');
+
+        let hasOpened = false;
+
+        function showModal() {
+            modal.classList.add('show');
+            // small delay to ensure focus works on mobile
+            setTimeout(() => nameInput.focus(), 50);
+        }
+        function hideModal() {
+            modal.classList.remove('show');
+            nameInput.value = '';
+        }
+
+        openBtn.addEventListener('click', () => {
+            if (hasOpened) return;
+            showModal();
+        });
+
+        // Close on Esc
+        window.addEventListener('keydown', (e) => {
+            if (!modal.classList.contains('show')) return;
+            if (e.key === 'Escape') hideModal();
+        });
+
+        // Submit on Enter
+        nameInput.addEventListener('keydown', (e) => {
+            if (e.key !== 'Enter') return;
+            const raw = nameInput.value.trim();
+            const name = raw.length ? raw : "my dear";
+            hideModal();
+            openEnvelopeAndType(name);
+        });
+
+        function sanitizeName(s) {
+            // Keep it simple & safe
+            return s.replace(/[<>]/g, '').slice(0, 30);
+        }
+
+        async function openEnvelopeAndType(name) {
+            if (hasOpened) return;
+            hasOpened = true;
+            // ---- BGM (play after user Enter to avoid autoplay block) ----
+            const bgm = document.getElementById('bgm');
+            try {
+                bgm.volume = 0.5;   // chỉnh âm lượng 0.0 - 1.0
+                await bgm.play();
+            } catch (e) {
+                console.log("Autoplay blocked. User interaction required:", e);
+            }
+
+
+            const safeName = sanitizeName(name);
+
+            // open envelope
+            stage.classList.add('opened');
+
+            // prepare message lines (English, warm "loved ones" vibe)
+            const lines = [
+                `Dear ${safeName},`,
+                `Merry Christmas! 🎄`,
+                `May this season wrap you in quiet joy,`,
+                `soft lights, and the kind of peace that feels like home.`,
+                ``,
+                `Christmas is coming, I’m wishing you and your loved ones:`,
+                `• warm laughter that lasts`,
+                `• gentle moments you want to replay`,
+                `• and a new year filled with hopeful beginnings.`,
+                `With cheerful,`,
+                `— Someone who cares ❤️`
+            ];
+
+            // Wait a beat so the letter "slides up" before typing starts
+            await sleep(700);
+            await typeLines(lines, contentEl, 55);
+        }
+
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        async function typeLines(lines, el, speed) {
+            el.textContent = "";
+            const cursor = document.createElement('span');
+            cursor.className = 'cursor';
+            el.appendChild(cursor);
+
+            for (let i = 0; i < lines.length; i++) {
+                await typeText(lines[i] + (i < lines.length - 1 ? "\n" : ""), el, cursor, speed);
+                await sleep(220);
+            }
+            // Keep cursor at end (optional)
+        }
+
+        async function typeText(text, el, cursor, speed) {
+            for (const ch of text) {
+                cursor.insertAdjacentText('beforebegin', ch);
+                // add tiny variance
+                await sleep(speed + Math.floor(Math.random() * 18));
+            }
+        }
+
+        // Click outside modal to close
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) hideModal();
+        });
+    </script>
+    <audio id="bgm" preload="auto" loop>
+        <source src="Jos_Feliciano_-_Feliz_Navidad_CeeNaija.com_.mp3" type="audio/mpeg" />
+    </audio>
+
+</body>
+
+</html>
